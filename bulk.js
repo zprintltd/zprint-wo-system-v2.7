@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>ZPRINT v2.7 – Bulk Preview</title>
-</head>
-<body>
+const SCRIPT_URL = "PASTE_V2_7_EXEC_URL_HERE";
 
-<h2>Bulk Preview</h2>
-<button onclick="bulkPrint()">Generate Preview</button>
-
-<script src="bulk.js?v=2.7.0"></script>
-</body>
-</html>
+function bulkPrint(){
+  fetch(SCRIPT_URL+"?action=bulkPrint")
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.docUrl){
+        window.open(d.docUrl,"_blank");
+      }
+    });
+}
