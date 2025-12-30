@@ -2,16 +2,39 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ZPRINT v2.7 – Bulk Preview</title>
+<title>ZPRINT v2.7 – Bulk Job Cards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 560px;
+}
+label {
+  display: block;
+  margin-top: 14px;
+  font-weight: bold;
+}
+select, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+}
+button {
+  margin-top: 20px;
+}
+#statusMsg {
+  margin-top: 16px;
+  font-weight: bold;
+}
+</style>
 </head>
+
 <body>
 
-<h2>Bulk Preview</h2>
-<button onclick="bulkPrint()">Generate Preview</button>
+<h2>ZPRINT v2.7 – Bulk Job Card Preview</h2>
 
-<script src="bulk.js?v=2.7.0"></script>
-</body>
-</html>
 <label>Status</label>
 <select id="status">
   <option value="ALL">All</option>
@@ -19,3 +42,11 @@
   <option value="In Progress">In Progress</option>
   <option value="Completed">Completed</option>
 </select>
+
+<button type="button" onclick="bulkPrint()">PRINT BULK JOB CARDS</button>
+
+<div id="statusMsg"></div>
+
+<script src="bulk.js"></script>
+</body>
+</html>
