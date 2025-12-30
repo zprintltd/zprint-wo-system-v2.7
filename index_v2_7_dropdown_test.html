@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ZPRINT v2.7 Dropdown Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;padding:20px}
+select{width:100%;padding:10px;margin:10px 0}
+#status{margin:10px 0;color:green;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<h3>ZPRINT v2.7 – Dropdown Test</h3>
+
+<div id="status">JS NOT RUNNING</div>
+
+<label>Category</label>
+<select id="category"></select>
+
+<label>Subcategory</label>
+<select id="subcategory"></select>
+
+<script>
+// ===== ABSOLUTE PROOF SCRIPT =====
+document.getElementById("status").innerText = "JS RUNNING ✔";
+
+// MASTER CATEGORY LIST (FINAL v2.6)
+const CATEGORIES = {
+  PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",MAG:"Magnet"}},
+  EMB:{subs:{STD:"Standard",PRM:"Premium"}},
+  BAN:{subs:{STD:"Standard",PRM:"Premium"}},
+  DTF:{subs:{DTF:"DTF"}},
+  CUS:{subs:{CUS:"Custom"}}
+};
+
+const cat = document.getElementById("category");
+const sub = document.getElementById("subcategory");
+
+cat.innerHTML = "<option value=''>Select Category</option>";
+sub.innerHTML = "<option value=''>Select Subcategory</option>";
+
+Object.keys(CATEGORIES).forEach(c=>{
+  const o=document.createElement("option");
+  o.value=c;
+  o.textContent=c;
+  cat.appendChild(o);
+});
+
+cat.addEventListener("change", ()=>{
+  sub.innerHTML = "<option value=''>Select Subcategory</option>";
+  Object.keys(CATEGORIES[cat.value].subs).forEach(s=>{
+    const o=document.createElement("option");
+    o.value=s;
+    o.textContent=s;
+    sub.appendChild(o);
+  });
+});
+</script>
+
+</body>
+</html>
