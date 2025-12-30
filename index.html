@@ -4,14 +4,37 @@
 <meta charset="UTF-8">
 <title>ZPRINT v2.7 – Work Order</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-body{font-family:Arial;padding:20px;max-width:560px}
-label{display:block;margin-top:14px;font-weight:bold}
-select,input,button{width:100%;padding:8px;margin-top:4px}
-button{margin-top:18px}
-#result{margin-top:20px}
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 560px;
+}
+
+label {
+  display: block;
+  margin-top: 14px;
+  font-weight: bold;
+}
+
+select, input, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 18px;
+}
+
+#result {
+  margin-top: 20px;
+}
 </style>
 </head>
+
 <body>
 
 <h2>ZPRINT v2.7 – Work Order</h2>
@@ -22,10 +45,10 @@ button{margin-top:18px}
 <label>Subcategory</label>
 <select id="subcategory"></select>
 
-<label>Client</label>
+<label>Client Name</label>
 <input id="client">
 
-<label>Phone</label>
+<label>Client Phone</label>
 <input id="phone">
 
 <label>Description</label>
@@ -37,18 +60,22 @@ button{margin-top:18px}
 <button id="generateBtn" type="button">Generate</button>
 
 <div id="result" style="display:none">
-  <p><b>Generated Filename</b></p>
+  <p><strong>Generated Filename</strong></p>
   <input id="filename" readonly>
   <button type="button" onclick="copyFilename()">COPY</button>
 </div>
 
 <script>
-console.log("v2.7 dropdown-safe script loaded");
-
+/* ===============================
+   CONFIG
+================================ */
 const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec’;
 
-/* FULL CATEGORIES */
+/* ===============================
+   FULL v2.6 CATEGORY MASTER
+================================ */
 const CATEGORIES = {
+
   PVC: {
     label: "PVC",
     subs: {
@@ -162,50 +189,63 @@ const CATEGORIES = {
 
 };
 
+/* ===============================
+   ELEMENTS
+================================ */
 const category = document.getElementById("category");
 const subcategory = document.getElementById("subcategory");
 
-/* INIT DROPDOWNS */
+/* ===============================
+   INIT DROPDOWNS (PROVEN)
+================================ */
 category.innerHTML = "<option value=''>Select Category</option>";
 subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
 
-Object.keys(CATEGORIES).forEach(c=>{
-  const o=document.createElement("option");
-  o.value=c;
-  o.textContent=c;
-  category.appendChild(o);
+Object.keys(CATEGORIES).forEach(cat => {
+  const opt = document.createElement("option");
+  opt.value = cat;
+  opt.textContent = `${cat} – ${CATEGORIES[cat].label}`;
+  category.appendChild(opt);
 });
 
-category.onchange = ()=>{
+category.onchange = () => {
   subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
-  Object.keys(CATEGORIES[category.value]?.subs || {}).forEach(s=>{
-    const o=document.createElement("option");
-    o.value=s;
-    o.textContent=s;
-    subcategory.appendChild(o);
+  const subs = CATEGORIES[category.value]?.subs || {};
+
+  Object.keys(subs).forEach(sub => {
+    const opt = document.createElement("option");
+    opt.value = sub;
+    opt.textContent = `${sub} – ${subs[sub]}`;
+    subcategory.appendChild(opt);
   });
 };
 
-/* GENERATE */
-document.getElementById("generateBtn").onclick = async ()=>{
+/* ===============================
+   GENERATE
+================================ */
+document.getElementById("generateBtn").onclick = async () => {
+
   const params = new URLSearchParams({
-    action:"createWO",
-    category:category.value,
-    subcategory:subcategory.value,
-    client:client.value,
-    phone:phone.value,
-    description:description.value,
-    version:version.value || "v0"
+    action: "createWO",
+    category: category.value,
+    subcategory: subcategory.value,
+    client: client.value,
+    phone: phone.value,
+    description: description.value,
+    version: version.value || "v0"
   });
 
   const res = await fetch(`${SCRIPT_URL}?${params}`);
   const data = await res.json();
 
   filename.value = data.filename;
-  result.style.display="block";
+  document.getElementById("result").style.display = "block";
 };
 
-function copyFilename(){
+/* ===============================
+   COPY
+================================ */
+function copyFilename() {
   filename.select();
   document.execCommand("copy");
 }
