@@ -11,24 +11,20 @@ body {
   padding: 20px;
   max-width: 560px;
 }
-
 label {
   display: block;
   margin-top: 14px;
   font-weight: bold;
 }
-
 select, input, button {
   width: 100%;
   padding: 8px;
   margin-top: 4px;
   box-sizing: border-box;
 }
-
 button {
   margin-top: 18px;
 }
-
 #result {
   margin-top: 20px;
 }
@@ -66,6 +62,11 @@ button {
 </div>
 
 <script>
+// ===== PROVEN SAFE SCRIPT BASE =====
+document.body.insertAdjacentHTML("afterbegin",
+  "<div style='color:green;font-weight:bold'>JS RUNNING ✔</div>"
+);
+
 /* ===============================
    CONFIG
 ================================ */
@@ -75,156 +76,50 @@ const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsU
    FULL v2.6 CATEGORY MASTER
 ================================ */
 const CATEGORIES = {
-
-  PVC: {
-    label: "PVC",
-    subs: {
-      CLEAR: "Clear",
-      PRC: "Print & Cut",
-      UV: "UV",
-      UVPC: "UV Print & Cut",
-      CUT: "Cutting",
-      PLN: "Plain",
-      GLDC: "Gold Cutting",
-      GLDP: "Gold Plain",
-      ECO: "Eco",
-      CLRPRC: "Clear Print & Cut",
-      FRPL: "Frost Plain",
-      FRCUT: "Frost Cut",
-      FRPRC: "Frost Print & Cut",
-      MAG: "Magnet"
-    }
-  },
-
-  EMB: {
-    label: "Embroidery",
-    subs: {
-      STD: "Standard",
-      PRM: "Premium"
-    }
-  },
-
-  CAN: {
-    label: "Canvas",
-    subs: {
-      COT: "Cotton",
-      UV: "UV",
-      ECO: "Eco",
-      OTH: "Other"
-    }
-  },
-
-  BAN: {
-    label: "Banner",
-    subs: {
-      UV: "UV",
-      ECO: "Eco",
-      TD: "Tear Drop",
-      FECO: "Flag Eco",
-      FUV: "Flag UV",
-      POP: "POP",
-      STD: "Standard",
-      PRM: "Premium"
-    }
-  },
-
-  MAP: {
-    label: "Map",
-    subs: {
-      NRM: "Normal",
-      PP: "PP",
-      POP: "POP"
-    }
-  },
-
-  SUB: {
-    label: "Sublimation",
-    subs: {
-      SUB: "Sublimation"
-    }
-  },
-
-  DTF: {
-    label: "DTF",
-    subs: {
-      DTF: "DTF"
-    }
-  },
-
-  CON: {
-    label: "Contra",
-    subs: {
-      UV: "UV",
-      ECO: "Eco",
-      PLN: "Plain"
-    }
-  },
-
-  FLT: {
-    label: "Flatbed",
-    subs: {
-      UVD: "UV_DTF",
-      PEN: "Pen",
-      NOTE: "Notebook",
-      ACR: "Acrylic"
-    }
-  },
-
-  PUB: {
-    label: "Publications",
-    subs: {
-      FLY: "Flyer",
-      BR: "Brochure",
-      BC: "Business Card",
-      OTH: "Other"
-    }
-  },
-
-  CUS: {
-    label: "Custom",
-    subs: {
-      CUS: "Custom Input"
-    }
-  }
-
+  PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",CUT:"Cutting",PLN:"Plain",GLDC:"Gold Cutting",GLDP:"Gold Plain",ECO:"Eco",CLRPRC:"Clear Print & Cut",FRPL:"Frost Plain",FRCUT:"Frost Cut",FRPRC:"Frost Print & Cut",MAG:"Magnet"}},
+  EMB:{subs:{STD:"Standard",PRM:"Premium"}},
+  CAN:{subs:{COT:"Cotton",UV:"UV",ECO:"Eco",OTH:"Other"}},
+  BAN:{subs:{UV:"UV",ECO:"Eco",TD:"Tear Drop",FECO:"Flag Eco",FUV:"Flag UV",POP:"POP",STD:"Standard",PRM:"Premium"}},
+  MAP:{subs:{NRM:"Normal",PP:"PP",POP:"POP"}},
+  SUB:{subs:{SUB:"Sublimation"}},
+  DTF:{subs:{DTF:"DTF"}},
+  CON:{subs:{UV:"UV",ECO:"Eco",PLN:"Plain"}},
+  FLT:{subs:{UVD:"UV_DTF",PEN:"Pen",NOTE:"Notebook",ACR:"Acrylic"}},
+  PUB:{subs:{FLY:"Flyer",BR:"Brochure",BC:"Business Card",OTH:"Other"}},
+  CUS:{subs:{CUS:"Custom Input"}}
 };
 
 /* ===============================
-   ELEMENTS
+   DROPDOWNS (KNOWN-GOOD LOGIC)
 ================================ */
 const category = document.getElementById("category");
 const subcategory = document.getElementById("subcategory");
 
-/* ===============================
-   INIT DROPDOWNS (PROVEN)
-================================ */
 category.innerHTML = "<option value=''>Select Category</option>";
 subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
 
-Object.keys(CATEGORIES).forEach(cat => {
-  const opt = document.createElement("option");
-  opt.value = cat;
-  opt.textContent = `${cat} – ${CATEGORIES[cat].label}`;
-  category.appendChild(opt);
+Object.keys(CATEGORIES).forEach(c => {
+  const o = document.createElement("option");
+  o.value = c;
+  o.textContent = c;
+  category.appendChild(o);
 });
 
-category.onchange = () => {
+category.addEventListener("change", () => {
   subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
   const subs = CATEGORIES[category.value]?.subs || {};
-
-  Object.keys(subs).forEach(sub => {
-    const opt = document.createElement("option");
-    opt.value = sub;
-    opt.textContent = `${sub} – ${subs[sub]}`;
-    subcategory.appendChild(opt);
+  Object.keys(subs).forEach(s => {
+    const o = document.createElement("option");
+    o.value = s;
+    o.textContent = s;
+    subcategory.appendChild(o);
   });
-};
+});
 
 /* ===============================
-   GENERATE
+   GENERATE WO
 ================================ */
 document.getElementById("generateBtn").onclick = async () => {
-
   const params = new URLSearchParams({
     action: "createWO",
     category: category.value,
@@ -237,6 +132,11 @@ document.getElementById("generateBtn").onclick = async () => {
 
   const res = await fetch(`${SCRIPT_URL}?${params}`);
   const data = await res.json();
+
+  if (!data.filename) {
+    alert("Failed to generate filename");
+    return;
+  }
 
   filename.value = data.filename;
   document.getElementById("result").style.display = "block";
