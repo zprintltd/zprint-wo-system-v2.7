@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ZPRINT FINAL TEST</title>
+<style>
+body{font-family:Arial;padding:20px}
+select{width:100%;padding:10px;margin:10px 0}
+</style>
+</head>
+
+<body>
+
+<h3>ZPRINT FINAL DROPDOWN TEST</h3>
+
+<p id="status" style="color:red;font-weight:bold">JS NOT RUNNING</p>
+
+<label>Category</label>
+<select id="category"></select>
+
+<label>Subcategory</label>
+<select id="subcategory"></select>
+
+<script>
+document.getElementById("status").innerText = "JS RUNNING ✔";
+document.getElementById("status").style.color = "green";
+
+const CATEGORIES = {
+  PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV"}},
+  EMB:{subs:{STD:"Standard"}},
+  CUS:{subs:{CUS:"Custom"}}
+};
+
+const cat = document.getElementById("category");
+const sub = document.getElementById("subcategory");
+
+cat.innerHTML = "<option value=''>Select Category</option>";
+sub.innerHTML = "<option value=''>Select Subcategory</option>";
+
+Object.keys(CATEGORIES).forEach(c=>{
+  const o=document.createElement("option");
+  o.value=c;
+  o.textContent=c;
+  cat.appendChild(o);
+});
+
+cat.onchange = ()=>{
+  sub.innerHTML = "<option value=''>Select Subcategory</option>";
+  Object.keys(CATEGORIES[cat.value].subs).forEach(s=>{
+    const o=document.createElement("option");
+    o.value=s;
+    o.textContent=s;
+    sub.appendChild(o);
+  });
+};
+</script>
+
+</body>
+</html>
