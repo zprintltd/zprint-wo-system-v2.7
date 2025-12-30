@@ -9,3 +9,14 @@ function bulkPrint(){
       }
     });
 }
+function bulkPrint(){
+  const status = document.getElementById("status").value;
+
+  fetch(`${SCRIPT_URL}?action=bulkPrint&status=${encodeURIComponent(status)}`)
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.docUrl){
+        window.open(d.docUrl,"_blank");
+      }
+    });
+}
