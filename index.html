@@ -1,110 +1,88 @@
-console.log("v2.7 index.html script loaded")
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>ZPRINT v2.7 – Work Order</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-body{font-family:Arial;padding:20px;max-width:560px}
-label{display:block;margin-top:12px;font-weight:bold}
-select,input,button{width:100%;padding:8px;margin-top:4px}
-button{margin-top:16px}
-#result{margin-top:20px}
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 560px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-top: 14px;
+  font-weight: bold;
+}
+
+select, input, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 18px;
+}
+
+#result {
+  margin-top: 20px;
+}
 </style>
 </head>
+
 <body>
 
 <h2>ZPRINT v2.7 – Work Order Form</h2>
 
 <form id="woForm">
 
-  <label>Category</label>
+  <label for="category">Category</label>
   <select id="category" required></select>
 
-  <label>Subcategory</label>
+  <label for="subcategory">Subcategory</label>
   <select id="subcategory" required></select>
 
-  <label>Client Name</label>
+  <label for="client">Client Name</label>
   <input id="client" required>
 
-  <label>Client Phone</label>
+  <label for="phone">Client Phone</label>
   <input id="phone">
 
-  <label>Description</label>
+  <label for="description">Description</label>
   <input id="description">
 
-  <label>Version</label>
+  <label for="version">Version</label>
   <input id="version" value="v0">
 
   <button type="submit">Generate</button>
 </form>
 
 <div id="result" style="display:none">
-  <p><b>Generated Filename</b></p>
+  <p><strong>Generated Filename</strong></p>
   <input id="filename" readonly>
   <button type="button" onclick="copyFilename()">COPY</button>
 </div>
 
 <script>
-console.log("script running");
-
-const CATEGORIES = {
-  PVC:{subs:{UV:"UV",PRC:"Print & Cut"}},
-  EMB:{subs:{STD:"Standard"}}
-};
-
-const category = document.getElementById("category");
-const subcategory = document.getElementById("subcategory");
-
-category.innerHTML = "<option value=''>Select Category</option>";
-subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
-
-Object.keys(CATEGORIES).forEach(c=>{
-  const o=document.createElement("option");
-  o.value=c;
-  o.textContent=c;
-  category.appendChild(o);
-});
-
-category.onchange = ()=>{
-  subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
-  Object.keys(CATEGORIES[category.value].subs).forEach(s=>{
-    const o=document.createElement("option");
-    o.value=s;
-    o.textContent=s;
-    subcategory.appendChild(o);
-  });
-};
-</script>
 /* ===============================
    CONFIG
 ================================ */
-const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec’;
+const SCRIPT_URL = https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec’;
 
 /* ===============================
-   CATEGORY DEFINITIONS (FULL)
+   CATEGORIES (LOCKED)
 ================================ */
 const CATEGORIES = {
-  PVC:{
-    label:"PVC",
-    subs:{
-      CLEAR:"Clear",
-      PRC:"Print & Cut",
-      UV:"UV",
-      UVPC:"UV Print & Cut",
-      CUT:"Cutting",
-      PLN:"Plain",
-      GLDC:"Gold Cutting",
-      GLDP:"Gold Plain",
-      ECO:"Eco",
-      CLRPRC:"Clear Print & Cut",
-      FRPL:"Frost Plain",
-      FRCUT:"Frost Cut",
-      FRPRC:"Frost Print & Cut",
-      MAG:"Magnet"
-    }
-  },
+  PVC:{label:"PVC",subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",CUT:"Cutting",PLN:"Plain",GLDC:"Gold Cutting",GLDP:"Gold Plain",ECO:"Eco",CLRPRC:"Clear Print & Cut",FRPL:"Frost Plain",FRCUT:"Frost Cut",FRPRC:"Frost Print & Cut",MAG:"Magnet"}},
   EMB:{label:"Embroidery",subs:{STD:"Standard",PRM:"Premium"}},
   CAN:{label:"Canvas",subs:{COT:"Cotton",UV:"UV",ECO:"Eco",OTH:"Other"}},
   BAN:{label:"Banner",subs:{UV:"UV",ECO:"Eco",STD:"Standard",PRM:"Premium"}},
@@ -118,31 +96,41 @@ const CATEGORIES = {
 };
 
 /* ===============================
-   DROPDOWN LOGIC
+   ELEMENT REFERENCES
 ================================ */
 const category = document.getElementById("category");
 const subcategory = document.getElementById("subcategory");
+const client = document.getElementById("client");
+const phone = document.getElementById("phone");
+const description = document.getElementById("description");
+const version = document.getElementById("version");
+const filename = document.getElementById("filename");
+const result = document.getElementById("result");
 
-function initCategories(){
+/* ===============================
+   INIT DROPDOWNS
+================================ */
+function initCategories() {
   category.innerHTML = "<option value=''>Select Category</option>";
   subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
 
-  Object.keys(CATEGORIES).forEach(c=>{
-    const o=document.createElement("option");
-    o.value=c;
-    o.textContent=c+" – "+CATEGORIES[c].label;
-    category.appendChild(o);
+  Object.keys(CATEGORIES).forEach(key => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = `${key} – ${CATEGORIES[key].label}`;
+    category.appendChild(opt);
   });
 }
 
-category.addEventListener("change",()=>{
+category.addEventListener("change", () => {
   subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
   const subs = CATEGORIES[category.value]?.subs || {};
-  Object.keys(subs).forEach(s=>{
-    const o=document.createElement("option");
-    o.value=s;
-    o.textContent=s+" – "+subs[s];
-    subcategory.appendChild(o);
+
+  Object.keys(subs).forEach(key => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = `${key} – ${subs[key]}`;
+    subcategory.appendChild(opt);
   });
 });
 
@@ -151,32 +139,40 @@ initCategories();
 /* ===============================
    FORM SUBMIT
 ================================ */
-document.getElementById("woForm").addEventListener("submit", async e=>{
+document.getElementById("woForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const params = new URLSearchParams({
-    action:"createWO",
-    category:category.value,
-    subcategory:subcategory.value,
-    client:client.value,
-    phone:phone.value,
-    description:description.value,
-    version:version.value || "v0"
+    action: "createWO",
+    category: category.value,
+    subcategory: subcategory.value,
+    client: client.value,
+    phone: phone.value,
+    description: description.value,
+    version: version.value || "v0"
   });
 
-  const res = await fetch(`${SCRIPT_URL}?${params}`);
-  const data = await res.json();
+  try {
+    const res = await fetch(`${SCRIPT_URL}?${params}`);
+    const data = await res.json();
 
-  if(!data.filename){
-    alert("Failed to generate filename");
-    return;
+    if (!data.filename) {
+      alert("Failed to generate filename.");
+      return;
+    }
+
+    filename.value = data.filename;
+    result.style.display = "block";
+
+  } catch (err) {
+    alert("Connection error. Check Apps Script URL.");
   }
-
-  filename.value = data.filename;
-  document.getElementById("result").style.display="block";
 });
 
-function copyFilename(){
+/* ===============================
+   COPY
+================================ */
+function copyFilename() {
   filename.select();
   document.execCommand("copy");
 }
