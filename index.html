@@ -1,45 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>ZPRINT v2.7 – Work Order</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 560px;
-}
-label {
-  display: block;
-  margin-top: 14px;
-  font-weight: bold;
-}
+body { font-family: Arial, sans-serif; padding: 20px; max-width: 560px; }
+label { display: block; margin-top: 14px; font-weight: bold; }
 select, input, button {
   width: 100%;
   padding: 8px;
   margin-top: 4px;
   box-sizing: border-box;
 }
-button {
-  margin-top: 18px;
-}
-#result {
-  margin-top: 20px;
-}
+button { margin-top: 18px; }
+#result { margin-top: 20px; }
+#status { color: green; font-weight: bold; margin-bottom: 10px; }
 </style>
 </head>
 
 <body>
 
 <h2>ZPRINT v2.7 – Work Order</h2>
+<div id="status">JS RUNNING ✔</div>
+
+<!-- =========================
+     DROPDOWNS (DO NOT TOUCH)
+========================= -->
 
 <label>Category</label>
 <select id="category"></select>
 
 <label>Subcategory</label>
 <select id="subcategory"></select>
+
+<!-- =========================
+     ADDITIONAL FIELDS
+========================= -->
 
 <label>Client Name</label>
 <input id="client">
@@ -62,18 +60,13 @@ button {
 </div>
 
 <script>
-// ===== PROVEN SAFE SCRIPT BASE =====
-document.body.insertAdjacentHTML("afterbegin",
-  "<div style='color:green;font-weight:bold'>JS RUNNING ✔</div>"
-);
-
 /* ===============================
    CONFIG
 ================================ */
-const SCRIPT_URL ='https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec’;
+const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec’;
 
 /* ===============================
-   FULL v2.6 CATEGORY MASTER
+   CATEGORY MASTER (v2.6 FINAL)
 ================================ */
 const CATEGORIES = {
   PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",CUT:"Cutting",PLN:"Plain",GLDC:"Gold Cutting",GLDP:"Gold Plain",ECO:"Eco",CLRPRC:"Clear Print & Cut",FRPL:"Frost Plain",FRCUT:"Frost Cut",FRPRC:"Frost Print & Cut",MAG:"Magnet"}},
@@ -90,31 +83,31 @@ const CATEGORIES = {
 };
 
 /* ===============================
-   DROPDOWNS (KNOWN-GOOD LOGIC)
+   DROPDOWN LOGIC (VERBATIM)
+   DO NOT MODIFY
 ================================ */
-const category = document.getElementById("category");
-const subcategory = document.getElementById("subcategory");
+const cat = document.getElementById("category");
+const sub = document.getElementById("subcategory");
 
-category.innerHTML = "<option value=''>Select Category</option>";
-subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
+cat.innerHTML = "<option value=''>Select Category</option>";
+sub.innerHTML = "<option value=''>Select Subcategory</option>";
 
-Object.keys(CATEGORIES).forEach(c => {
-  const o = document.createElement("option");
-  o.value = c;
-  o.textContent = c;
-  category.appendChild(o);
+Object.keys(CATEGORIES).forEach(c=>{
+  const o=document.createElement("option");
+  o.value=c;
+  o.textContent=c;
+  cat.appendChild(o);
 });
 
-category.addEventListener("change", () => {
-  subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
-  const subs = CATEGORIES[category.value]?.subs || {};
-  Object.keys(subs).forEach(s => {
-    const o = document.createElement("option");
-    o.value = s;
-    o.textContent = s;
-    subcategory.appendChild(o);
+cat.onchange = ()=>{
+  sub.innerHTML = "<option value=''>Select Subcategory</option>";
+  Object.keys(CATEGORIES[cat.value]?.subs || {}).forEach(s=>{
+    const o=document.createElement("option");
+    o.value=s;
+    o.textContent=s;
+    sub.appendChild(o);
   });
-});
+};
 
 /* ===============================
    GENERATE WO
@@ -122,8 +115,8 @@ category.addEventListener("change", () => {
 document.getElementById("generateBtn").onclick = async () => {
   const params = new URLSearchParams({
     action: "createWO",
-    category: category.value,
-    subcategory: subcategory.value,
+    category: cat.value,
+    subcategory: sub.value,
     client: client.value,
     phone: phone.value,
     description: description.value,
@@ -145,7 +138,7 @@ document.getElementById("generateBtn").onclick = async () => {
 /* ===============================
    COPY
 ================================ */
-function copyFilename() {
+function copyFilename(){
   filename.select();
   document.execCommand("copy");
 }
