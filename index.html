@@ -47,6 +47,37 @@ button{margin-top:16px}
 </div>
 
 <script>
+  <script>
+console.log("script running");
+
+const CATEGORIES = {
+  PVC:{subs:{UV:"UV",PRC:"Print & Cut"}},
+  EMB:{subs:{STD:"Standard"}}
+};
+
+const category = document.getElementById("category");
+const subcategory = document.getElementById("subcategory");
+
+category.innerHTML = "<option value=''>Select Category</option>";
+subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
+
+Object.keys(CATEGORIES).forEach(c=>{
+  const o=document.createElement("option");
+  o.value=c;
+  o.textContent=c;
+  category.appendChild(o);
+});
+
+category.onchange = ()=>{
+  subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
+  Object.keys(CATEGORIES[category.value].subs).forEach(s=>{
+    const o=document.createElement("option");
+    o.value=s;
+    o.textContent=s;
+    subcategory.appendChild(o);
+  });
+};
+</script>
 /* ===============================
    CONFIG
 ================================ */
