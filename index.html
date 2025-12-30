@@ -16,102 +16,95 @@ button{margin-top:18px}
 
 <h2>ZPRINT v2.7 – Work Order</h2>
 
-<form id="woForm">
-  <label>Category</label>
-  <select id="category" required></select>
+<label>Category</label>
+<select id="category"></select>
 
-  <label>Subcategory</label>
-  <select id="subcategory" required></select>
+<label>Subcategory</label>
+<select id="subcategory"></select>
 
-  <label>Client</label>
-  <input id="client" required>
+<label>Client</label>
+<input id="client">
 
-  <label>Phone</label>
-  <input id="phone">
+<label>Phone</label>
+<input id="phone">
 
-  <label>Description</label>
-  <input id="description">
+<label>Description</label>
+<input id="description">
 
-  <label>Version</label>
-  <input id="version" value="v0">
+<label>Version</label>
+<input id="version" value="v0">
 
-  <button type="submit">Generate</button>
-</form>
+<button id="generateBtn" type="button">Generate</button>
 
 <div id="result" style="display:none">
-  <p><b>Filename</b></p>
+  <p><b>Generated Filename</b></p>
   <input id="filename" readonly>
-  <button type="button" id="copyBtn">COPY</button>
+  <button type="button" onclick="copyFilename()">COPY</button>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+console.log("v2.7 dropdown-safe script loaded");
 
-  const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec’;
+const SCRIPT_URL = "PASTE_V2_7_EXEC_URL_HERE";
 
-  const CATEGORIES = {
-    PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",MAG:"Magnet"}},
-    EMB:{subs:{STD:"Standard",PRM:"Premium"}},
-    BAN:{subs:{STD:"Standard",PRM:"Premium"}},
-    DTF:{subs:{DTF:"DTF"}},
-    MAP:{subs:{NRM:"Normal"}},
-    CUS:{subs:{CUS:"Custom"}}
-  };
+/* FULL CATEGORIES */
+const CATEGORIES = {
+  PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",MAG:"Magnet"}},
+  EMB:{subs:{STD:"Standard",PRM:"Premium"}},
+  CAN:{subs:{COT:"Cotton",UV:"UV",ECO:"Eco"}},
+  BAN:{subs:{STD:"Standard",PRM:"Premium"}},
+  MAP:{subs:{NRM:"Normal"}},
+  DTF:{subs:{DTF:"DTF"}},
+  CUS:{subs:{CUS:"Custom"}}
+};
 
-  const category = document.getElementById("category");
-  const subcategory = document.getElementById("subcategory");
-  const form = document.getElementById("woForm");
-  const filename = document.getElementById("filename");
-  const result = document.getElementById("result");
+const category = document.getElementById("category");
+const subcategory = document.getElementById("subcategory");
 
-  // INIT
-  category.innerHTML = "<option value=''>Select Category</option>";
-  subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
+/* INIT DROPDOWNS */
+category.innerHTML = "<option value=''>Select Category</option>";
+subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
 
-  Object.keys(CATEGORIES).forEach(c=>{
-    const o=document.createElement("option");
-    o.value=c;
-    o.textContent=c;
-    category.appendChild(o);
-  });
-
-  category.addEventListener("change",()=>{
-    subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
-    Object.keys(CATEGORIES[category.value]?.subs || {}).forEach(s=>{
-      const o=document.createElement("option");
-      o.value=s;
-      o.textContent=s;
-      subcategory.appendChild(o);
-    });
-  });
-
-  // SUBMIT
-  form.addEventListener("submit", async e=>{
-    e.preventDefault();
-
-    const params = new URLSearchParams({
-      action:"createWO",
-      category:category.value,
-      subcategory:subcategory.value,
-      client:client.value,
-      phone:phone.value,
-      description:description.value,
-      version:version.value || "v0"
-    });
-
-    const res = await fetch(`${SCRIPT_URL}?${params}`);
-    const data = await res.json();
-
-    filename.value = data.filename;
-    result.style.display="block";
-  });
-
-  document.getElementById("copyBtn").onclick = ()=>{
-    filename.select();
-    document.execCommand("copy");
-  };
-
+Object.keys(CATEGORIES).forEach(c=>{
+  const o=document.createElement("option");
+  o.value=c;
+  o.textContent=c;
+  category.appendChild(o);
 });
+
+category.onchange = ()=>{
+  subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
+  Object.keys(CATEGORIES[category.value]?.subs || {}).forEach(s=>{
+    const o=document.createElement("option");
+    o.value=s;
+    o.textContent=s;
+    subcategory.appendChild(o);
+  });
+};
+
+/* GENERATE */
+document.getElementById("generateBtn").onclick = async ()=>{
+  const params = new URLSearchParams({
+    action:"createWO",
+    category:category.value,
+    subcategory:subcategory.value,
+    client:client.value,
+    phone:phone.value,
+    description:description.value,
+    version:version.value || "v0"
+  });
+
+  const res = await fetch(`${SCRIPT_URL}?${params}`);
+  const data = await res.json();
+
+  filename.value = data.filename;
+  result.style.display="block";
+};
+
+function copyFilename(){
+  filename.select();
+  document.execCommand("copy");
+}
 </script>
 
 </body>
