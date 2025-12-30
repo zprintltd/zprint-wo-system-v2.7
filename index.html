@@ -49,13 +49,118 @@ const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsU
 
 /* FULL CATEGORIES */
 const CATEGORIES = {
-  PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",MAG:"Magnet"}},
-  EMB:{subs:{STD:"Standard",PRM:"Premium"}},
-  CAN:{subs:{COT:"Cotton",UV:"UV",ECO:"Eco"}},
-  BAN:{subs:{STD:"Standard",PRM:"Premium"}},
-  MAP:{subs:{NRM:"Normal"}},
-  DTF:{subs:{DTF:"DTF"}},
-  CUS:{subs:{CUS:"Custom"}}
+
+  PVC: {
+    label: "PVC",
+    subs: {
+      CLEAR: "Clear",
+      PRC: "Print & Cut",
+      UV: "UV",
+      UVPC: "UV Print & Cut",
+      CUT: "Cutting",
+      PLN: "Plain",
+      GLDC: "Gold Cutting",
+      GLDP: "Gold Plain",
+      ECO: "Eco",
+      CLRPRC: "Clear Print & Cut",
+      FRPL: "Frost Plain",
+      FRCUT: "Frost Cut",
+      FRPRC: "Frost Print & Cut",
+      MAG: "Magnet"
+    }
+  },
+
+  EMB: {
+    label: "Embroidery",
+    subs: {
+      STD: "Standard",
+      PRM: "Premium"
+    }
+  },
+
+  CAN: {
+    label: "Canvas",
+    subs: {
+      COT: "Cotton",
+      UV: "UV",
+      ECO: "Eco",
+      OTH: "Other"
+    }
+  },
+
+  BAN: {
+    label: "Banner",
+    subs: {
+      UV: "UV",
+      ECO: "Eco",
+      TD: "Tear Drop",
+      FECO: "Flag Eco",
+      FUV: "Flag UV",
+      POP: "POP",
+      STD: "Standard",
+      PRM: "Premium"
+    }
+  },
+
+  MAP: {
+    label: "Map",
+    subs: {
+      NRM: "Normal",
+      PP: "PP",
+      POP: "POP"
+    }
+  },
+
+  SUB: {
+    label: "Sublimation",
+    subs: {
+      SUB: "Sublimation"
+    }
+  },
+
+  DTF: {
+    label: "DTF",
+    subs: {
+      DTF: "DTF"
+    }
+  },
+
+  CON: {
+    label: "Contra",
+    subs: {
+      UV: "UV",
+      ECO: "Eco",
+      PLN: "Plain"
+    }
+  },
+
+  FLT: {
+    label: "Flatbed",
+    subs: {
+      UVD: "UV_DTF",
+      PEN: "Pen",
+      NOTE: "Notebook",
+      ACR: "Acrylic"
+    }
+  },
+
+  PUB: {
+    label: "Publications",
+    subs: {
+      FLY: "Flyer",
+      BR: "Brochure",
+      BC: "Business Card",
+      OTH: "Other"
+    }
+  },
+
+  CUS: {
+    label: "Custom",
+    subs: {
+      CUS: "Custom Input"
+    }
+  }
+
 };
 
 const category = document.getElementById("category");
