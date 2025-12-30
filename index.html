@@ -4,178 +4,114 @@
 <meta charset="UTF-8">
 <title>ZPRINT v2.7 – Work Order</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 560px;
-}
-
-h2 {
-  margin-bottom: 10px;
-}
-
-label {
-  display: block;
-  margin-top: 14px;
-  font-weight: bold;
-}
-
-select, input, button {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  box-sizing: border-box;
-}
-
-button {
-  margin-top: 18px;
-}
-
-#result {
-  margin-top: 20px;
-}
+body{font-family:Arial;padding:20px;max-width:560px}
+label{display:block;margin-top:14px;font-weight:bold}
+select,input,button{width:100%;padding:8px;margin-top:4px}
+button{margin-top:18px}
+#result{margin-top:20px}
 </style>
 </head>
-
 <body>
 
-<h2>ZPRINT v2.7 – Work Order Form</h2>
+<h2>ZPRINT v2.7 – Work Order</h2>
 
 <form id="woForm">
-
-  <label for="category">Category</label>
+  <label>Category</label>
   <select id="category" required></select>
 
-  <label for="subcategory">Subcategory</label>
+  <label>Subcategory</label>
   <select id="subcategory" required></select>
 
-  <label for="client">Client Name</label>
+  <label>Client</label>
   <input id="client" required>
 
-  <label for="phone">Client Phone</label>
+  <label>Phone</label>
   <input id="phone">
 
-  <label for="description">Description</label>
+  <label>Description</label>
   <input id="description">
 
-  <label for="version">Version</label>
+  <label>Version</label>
   <input id="version" value="v0">
 
   <button type="submit">Generate</button>
 </form>
 
 <div id="result" style="display:none">
-  <p><strong>Generated Filename</strong></p>
+  <p><b>Filename</b></p>
   <input id="filename" readonly>
-  <button type="button" onclick="copyFilename()">COPY</button>
+  <button type="button" id="copyBtn">COPY</button>
 </div>
 
 <script>
-/* ===============================
-   CONFIG
-================================ */
-const SCRIPT_URL = https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec’;
+document.addEventListener("DOMContentLoaded", () => {
 
-/* ===============================
-   CATEGORIES (LOCKED)
-================================ */
-const CATEGORIES = {
-  PVC:{label:"PVC",subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",CUT:"Cutting",PLN:"Plain",GLDC:"Gold Cutting",GLDP:"Gold Plain",ECO:"Eco",CLRPRC:"Clear Print & Cut",FRPL:"Frost Plain",FRCUT:"Frost Cut",FRPRC:"Frost Print & Cut",MAG:"Magnet"}},
-  EMB:{label:"Embroidery",subs:{STD:"Standard",PRM:"Premium"}},
-  CAN:{label:"Canvas",subs:{COT:"Cotton",UV:"UV",ECO:"Eco",OTH:"Other"}},
-  BAN:{label:"Banner",subs:{UV:"UV",ECO:"Eco",STD:"Standard",PRM:"Premium"}},
-  MAP:{label:"Map",subs:{NRM:"Normal",PP:"PP",POP:"POP"}},
-  SUB:{label:"Sublimation",subs:{SUB:"Sublimation"}},
-  DTF:{label:"DTF",subs:{DTF:"DTF"}},
-  CON:{label:"Contra",subs:{UV:"UV",ECO:"Eco",PLN:"Plain"}},
-  FLT:{label:"Flatbed",subs:{UVD:"UV_DTF",PEN:"Pen",NOTE:"Notebook",ACR:"Acrylic"}},
-  PUB:{label:"Publications",subs:{FLY:"Flyer",BR:"Brochure",BC:"Business Card",OTH:"Other"}},
-  CUS:{label:"Custom",subs:{CUS:"Custom Input"}}
-};
+  const SCRIPT_URL = "PASTE_V2_7_EXEC_URL_HERE";
 
-/* ===============================
-   ELEMENT REFERENCES
-================================ */
-const category = document.getElementById("category");
-const subcategory = document.getElementById("subcategory");
-const client = document.getElementById("client");
-const phone = document.getElementById("phone");
-const description = document.getElementById("description");
-const version = document.getElementById("version");
-const filename = document.getElementById("filename");
-const result = document.getElementById("result");
+  const CATEGORIES = {
+    PVC:{subs:{CLEAR:"Clear",PRC:"Print & Cut",UV:"UV",UVPC:"UV Print & Cut",MAG:"Magnet"}},
+    EMB:{subs:{STD:"Standard",PRM:"Premium"}},
+    BAN:{subs:{STD:"Standard",PRM:"Premium"}},
+    DTF:{subs:{DTF:"DTF"}},
+    MAP:{subs:{NRM:"Normal"}},
+    CUS:{subs:{CUS:"Custom"}}
+  };
 
-/* ===============================
-   INIT DROPDOWNS
-================================ */
-function initCategories() {
+  const category = document.getElementById("category");
+  const subcategory = document.getElementById("subcategory");
+  const form = document.getElementById("woForm");
+  const filename = document.getElementById("filename");
+  const result = document.getElementById("result");
+
+  // INIT
   category.innerHTML = "<option value=''>Select Category</option>";
   subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
 
-  Object.keys(CATEGORIES).forEach(key => {
-    const opt = document.createElement("option");
-    opt.value = key;
-    opt.textContent = `${key} – ${CATEGORIES[key].label}`;
-    category.appendChild(opt);
-  });
-}
-
-category.addEventListener("change", () => {
-  subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
-  const subs = CATEGORIES[category.value]?.subs || {};
-
-  Object.keys(subs).forEach(key => {
-    const opt = document.createElement("option");
-    opt.value = key;
-    opt.textContent = `${key} – ${subs[key]}`;
-    subcategory.appendChild(opt);
-  });
-});
-
-initCategories();
-
-/* ===============================
-   FORM SUBMIT
-================================ */
-document.getElementById("woForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const params = new URLSearchParams({
-    action: "createWO",
-    category: category.value,
-    subcategory: subcategory.value,
-    client: client.value,
-    phone: phone.value,
-    description: description.value,
-    version: version.value || "v0"
+  Object.keys(CATEGORIES).forEach(c=>{
+    const o=document.createElement("option");
+    o.value=c;
+    o.textContent=c;
+    category.appendChild(o);
   });
 
-  try {
+  category.addEventListener("change",()=>{
+    subcategory.innerHTML = "<option value=''>Select Subcategory</option>";
+    Object.keys(CATEGORIES[category.value]?.subs || {}).forEach(s=>{
+      const o=document.createElement("option");
+      o.value=s;
+      o.textContent=s;
+      subcategory.appendChild(o);
+    });
+  });
+
+  // SUBMIT
+  form.addEventListener("submit", async e=>{
+    e.preventDefault();
+
+    const params = new URLSearchParams({
+      action:"createWO",
+      category:category.value,
+      subcategory:subcategory.value,
+      client:client.value,
+      phone:phone.value,
+      description:description.value,
+      version:version.value || "v0"
+    });
+
     const res = await fetch(`${SCRIPT_URL}?${params}`);
     const data = await res.json();
 
-    if (!data.filename) {
-      alert("Failed to generate filename.");
-      return;
-    }
-
     filename.value = data.filename;
-    result.style.display = "block";
+    result.style.display="block";
+  });
 
-  } catch (err) {
-    alert("Connection error. Check Apps Script URL.");
-  }
+  document.getElementById("copyBtn").onclick = ()=>{
+    filename.select();
+    document.execCommand("copy");
+  };
+
 });
-
-/* ===============================
-   COPY
-================================ */
-function copyFilename() {
-  filename.select();
-  document.execCommand("copy");
-}
 </script>
 
 </body>
