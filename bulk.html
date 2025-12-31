@@ -2,50 +2,71 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ZPRINT v2.7 – Bulk Job Cards</title>
+<title>Bulk Job Cards</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 560px;
+body { font-family: Arial, sans-serif; padding: 20px; }
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
 }
-label {
-  display: block;
-  margin-top: 14px;
-  font-weight: bold;
-}
-select, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-}
-button {
-  margin-top: 20px;
-}
-#statusMsg {
-  margin-top: 16px;
-  font-weight: bold;
-}
+label { font-weight: bold; }
+input, select, button { padding: 8px; width: 100%; }
+button { margin-top: 15px; }
 </style>
 </head>
 
 <body>
 
-<h2>ZPRINT v2.7 – Bulk Job Card Preview</h2>
+<h2>Bulk Job Card Printing</h2>
 
-<label>Status</label>
-<select id="status">
-  <option value="ALL">All</option>
-  <option value="Pending">Pending</option>
-  <option value="In Progress">In Progress</option>
-  <option value="Completed">Completed</option>
-</select>
+<div class="filters">
 
-<button type="button" onclick="bulkPrint()">PRINT BULK JOB CARDS</button>
+  <div>
+    <label>Status</label>
+    <select id="status">
+      <option value="ALL">All</option>
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
 
-<div id="statusMsg"></div>
+  <div>
+    <label>Date From</label>
+    <input type="date" id="dateFrom">
+  </div>
+
+  <div>
+    <label>Date To</label>
+    <input type="date" id="dateTo">
+  </div>
+
+  <div>
+    <label>WO From</label>
+    <input id="woFrom">
+  </div>
+
+  <div>
+    <label>WO To</label>
+    <input id="woTo">
+  </div>
+
+  <div>
+    <label>Client Name</label>
+    <input id="client">
+  </div>
+
+  <div>
+    <label>Telephone</label>
+    <input id="phone">
+  </div>
+
+</div>
+
+<button onclick="bulkPrint()">PRINT BULK JOB CARDS</button>
 
 <script src="bulk.js"></script>
 </body>
