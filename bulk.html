@@ -2,28 +2,41 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Bulk Job Cards</title>
+<title>Bulk Job Card Print</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body { font-family: Arial, sans-serif; padding: 20px; }
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
 .filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
 }
-label { font-weight: bold; }
-input, select, button { padding: 8px; width: 100%; }
-button { margin-top: 15px; }
+label {
+  font-weight: bold;
+}
+input, select, button {
+  padding: 8px;
+  width: 100%;
+}
+button {
+  margin-top: 15px;
+}
+#msg {
+  margin-top: 15px;
+  font-weight: bold;
+}
 </style>
 </head>
 
 <body>
 
-<h2>Bulk Job Card Printing</h2>
+<h2>Bulk Job Card Print</h2>
 
 <div class="filters">
-
   <div>
     <label>Status</label>
     <select id="status">
@@ -55,18 +68,19 @@ button { margin-top: 15px; }
   </div>
 
   <div>
-    <label>Client Name</label>
+    <label>Client</label>
     <input id="client">
   </div>
 
   <div>
-    <label>Telephone</label>
+    <label>Phone</label>
     <input id="phone">
   </div>
-
 </div>
 
 <button onclick="bulkPrint()">PRINT BULK JOB CARDS</button>
+
+<div id="msg"></div>
 
 <script src="bulk.js"></script>
 </body>
