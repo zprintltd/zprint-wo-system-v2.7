@@ -11,7 +11,9 @@ function searchWO() {
     dateFrom: document.getElementById("dateFrom").value,
     dateTo: document.getElementById("dateTo").value,
     woFrom: document.getElementById("woFrom").value,
-    woTo: document.getElementById("woTo").value
+    woTo: document.getElementById("woTo").value,
+    client: document.getElementById("client").value,
+    phone: document.getElementById("phone").value
   });
 
   fetch(`${SCRIPT_URL}?${params}`)
