@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Work Order</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 400px;
+}
+.line {
+  margin-bottom: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="content">Loading…</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkE9WHkiSqjMZBZsUYIF0BH3ivgbevnYzjqFzvCo0d-gBkje-_-fCwZmOs8vOtAxhO/exec";
+
+const params = new URLSearchParams(window.location.search);
+const wo = params.get("wo");
+
+if (!wo) {
+  document.getElementById("content").innerText = "WO not specified";
+} else {
+  fetch(`${SCRIPT_URL}?action=searchWO&woFrom=${wo}&woTo=${wo}`)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.length) {
+        document.getElementById("content").innerText = "WO not found";
+        return;
+      }
+
+      const r = data[0];
+
+      document.getElementById("content").innerHTML = `
+        <div class="line"><b>WO:</b> ${r.wo}</div>
+        <div class="line"><b>Date:</b> ${r.date}</div>
+        <div class="line"><b>Client:</b> ${r.client}</div>
+        <div class="line"><b>Category:</b> ${r.category}</div>
+        <div class="line"><b>Status:</b> ${r.status}</div>
+      `;
+    });
+}
+</script>
+
+</body>
+</html>
