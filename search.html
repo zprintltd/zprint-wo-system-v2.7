@@ -2,18 +2,125 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ZPRINT v2.7 – Search</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZPRINT – Work Order Search</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+
+input, select, button {
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+button.search {
+  width: auto;
+  padding: 8px 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background: #f5f5f5;
+}
+
+td.actions button {
+  padding: 6px 12px;
+}
+</style>
 </head>
+
 <body>
 
-<h2>Search Work Orders</h2>
+<h2>ZPRINT – Work Order Search</h2>
 
-<input id="term" placeholder="WO / Client / Phone">
-<button onclick="search()">Search</button>
+<div class="filters">
 
-<table border="1" cellpadding="6" id="tbl"></table>
+  <div>
+    <label>Status</label>
+    <select id="status">
+      <option value="ALL">All</option>
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
 
-<script src="search.js?v=2.7.0"></script>
+  <div>
+    <label>Date From</label>
+    <input type="date" id="dateFrom">
+  </div>
+
+  <div>
+    <label>Date To</label>
+    <input type="date" id="dateTo">
+  </div>
+
+  <div>
+    <label>WO From (optional)</label>
+    <input id="woFrom" placeholder="001">
+  </div>
+
+  <div>
+    <label>WO To (optional)</label>
+    <input id="woTo" placeholder="050">
+  </div>
+
+</div>
+
+<div class="actions">
+  <button class="search" onclick="searchWO()">SEARCH</button>
+</div>
+
+<table id="resultsTable" style="display:none">
+  <thead>
+    <tr>
+      <th>WO</th>
+      <th>Date</th>
+      <th>Client</th>
+      <th>Category</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="search.js"></script>
 </body>
 </html>
