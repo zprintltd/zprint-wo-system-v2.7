@@ -80,3 +80,19 @@ if (woParam) {
   document.getElementById("woTo").value = woParam;
   searchWO();
 }
+function printAll() {
+
+  const params = new URLSearchParams({
+    action: "bulkPrint",
+    status: document.getElementById("status").value,
+    dateFrom: document.getElementById("dateFrom").value,
+    dateTo: document.getElementById("dateTo").value,
+    woFrom: document.getElementById("woFrom").value,
+    woTo: document.getElementById("woTo").value,
+    client: document.getElementById("client").value,
+    phone: document.getElementById("phone").value
+  });
+
+  // Reuse bulk print backend (CORS-safe)
+  window.open(`${SCRIPT_URL}?${params.toString()}`, "_blank");
+}
