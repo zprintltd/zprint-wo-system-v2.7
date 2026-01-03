@@ -1,127 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ZPRINT – Work Order Search</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>ZPRINT – Work Order Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<style>
-body { font-family: Arial, sans-serif; padding: 20px; }
-h2 { margin-bottom: 15px; }
+  <style>
+    :root {
+      /* APPROVED BRAND COLOURS ONLY */
+      --brand-primary: #1F2933; /* Dark charcoal */
+      --brand-accent:  #F4B400; /* Yellow accent */
+    }
 
-.filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-bottom: 15px;
-}
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: var(--brand-primary);
+      margin: 0;
+      padding: 20px;
+    }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 4px;
-}
+    h1 {
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
 
-input, select, button {
-  padding: 8px;
-  width: 100%;
-  box-sizing: border-box;
-}
+    /* SEARCH FILTERS */
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
 
-.actions { margin-top: 10px; }
+    input, select, button {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid var(--brand-primary);
+      background: #fff;
+      color: var(--brand-primary);
+    }
 
-button.search {
-  width: auto;
-  padding: 8px 18px;
-}
+    button {
+      background: var(--brand-accent);
+      border: none;
+      cursor: pointer;
+    }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
+    .actions {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
+    /* RESULTS */
+    #results {
+      margin-top: 10px;
+    }
 
-th { background: #f5f5f5; }
+    .wo-card {
+      border: 1px solid var(--brand-primary);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
 
-td.actions button {
-  padding: 6px 12px;
-}
-</style>
+    .wo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .wo-number {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .wo-status {
+      font-size: 13px;
+      padding: 4px 8px;
+      background: var(--brand-accent);
+      color: #000;
+    }
+
+    .wo-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 14px;
+    }
+
+    .wo-line .label {
+      opacity: 0.7;
+    }
+
+    .wo-line .value {
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .wo-actions {
+      margin-top: 12px;
+      text-align: right;
+    }
+
+    .wo-actions button {
+      background: var(--brand-accent);
+      border: none;
+      padding: 6px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>ZPRINT – Work Order Search</h2>
+  <h1>Work Order Search</h1>
 
-<div class="filters">
-
-  <div>
-    <label>Status</label>
+  <!-- SEARCH FILTERS -->
+  <div class="filters">
+    <input id="client" placeholder="Client name" />
+    <input id="phone" placeholder="Phone number" />
     <select id="status">
-      <option value="ALL">All</option>
+      <option value="ALL">All Status</option>
       <option value="Pending">Pending</option>
       <option value="In Progress">In Progress</option>
       <option value="Completed">Completed</option>
     </select>
+    <input id="dateFrom" type="date" />
+    <input id="dateTo" type="date" />
+    <input id="woFrom" placeholder="WO from (e.g. 001)" />
+    <input id="woTo" placeholder="WO to (e.g. 050)" />
   </div>
 
-  <div>
-    <label>Date From</label>
-    <input type="date" id="dateFrom">
+  <!-- ACTION BUTTONS -->
+  <div class="actions">
+    <button onclick="searchWO()">SEARCH</button>
+    <!-- Optional: requires printAll() in search.js -->
+    <!-- <button onclick="printAll()">PRINT ALL</button> -->
   </div>
 
-  <div>
-    <label>Date To</label>
-    <input type="date" id="dateTo">
-  </div>
+  <!-- RESULTS CONTAINER -->
+  <div id="results"></div>
 
-  <div>
-    <label>WO From (optional)</label>
-    <input id="woFrom" placeholder="001">
-  </div>
+  <!-- SCRIPT -->
+  <script src="./search.js?v=2.7.0"></script>
 
-  <div>
-    <label>WO To (optional)</label>
-    <input id="woTo" placeholder="050">
-  </div>
-
-  <div>
-    <label>Client Name</label>
-    <input id="client" placeholder="Client name">
-  </div>
-
-  <div>
-    <label>Telephone</label>
-    <input id="phone" placeholder="Phone number">
-  </div>
-
-</div>
-
-<div class="actions">
-  <button class="search" onclick="searchWO()">SEARCH</button>
-  <button class="search" onclick="printAll()">PRINT ALL</button>
-</div>
-
-<table id="resultsTable" style="display:none">
-  <thead>
-    <tr>
-      <th>WO</th>
-      <th>Date</th>
-      <th>Client</th>
-      <th>Category</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<script src="search.js"></script>
 </body>
 </html>
