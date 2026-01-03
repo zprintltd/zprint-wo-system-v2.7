@@ -88,3 +88,21 @@ function renderResults(data) {
 function printSingle(wo) {
   window.open(`${SCRIPT_URL}?action=printSingle&wo=${wo}`, "_blank");
 }
+
+/* =========================
+   BULK PRINT
+========================= */
+function printAll() {
+  const params = new URLSearchParams({
+    action: "bulkPrint",
+    client: document.getElementById("client").value,
+    phone: document.getElementById("phone").value,
+    status: document.getElementById("status").value,
+    dateFrom: document.getElementById("dateFrom").value,
+    dateTo: document.getElementById("dateTo").value,
+    woFrom: document.getElementById("woFrom").value,
+    woTo: document.getElementById("woTo").value
+  });
+
+  window.open(`${SCRIPT_URL}?${params.toString()}`, "_blank");
+}
