@@ -42,16 +42,38 @@ function renderResults(rows) {
   rows.forEach(r => {
     const tr = document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>${r.wo}</td>
-      <td>${r.date}</td>
-      <td>${r.client}</td>
-      <td>${r.category}</td>
-      <td>${r.status}</td>
-      <td class="actions">
-        <button onclick="printWO('${r.wo}')">PRINT</button>
-      </td>
-    `;
+const container = document.getElementById("results");
+container.innerHTML = "";
+
+data.forEach(r => {
+  container.innerHTML += `
+    <div class="wo-card">
+      <div class="wo-header">
+        <span class="wo-number">WO${r.wo}</span>
+        <span class="wo-status">${r.status}</span>
+      </div>
+
+      <div class="wo-line">
+        <span class="label">Date</span>
+        <span class="value">${r.date}</span>
+      </div>
+
+      <div class="wo-line">
+        <span class="label">Client</span>
+        <span class="value">${r.client}</span>
+      </div>
+
+      <div class="wo-line">
+        <span class="label">Category</span>
+        <span class="value">${r.category}</span>
+      </div>
+
+      <div class="wo-actions">
+        <button onclick="printSingle('${r.wo}')">PRINT</button>
+      </div>
+    </div>
+  `;
+});
 
     tbody.appendChild(tr);
   });
