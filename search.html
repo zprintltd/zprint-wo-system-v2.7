@@ -158,16 +158,30 @@
   <button onclick="searchWO()">SEARCH</button>
   <button class="print-all" onclick="printAll()">PRINT ALL</button>
 </div>
-/* PRINT ALL – secondary action */
-button.print-all {
-  background: #E5E7EB;      /* light grey */
-  color: #1F2933;           /* brand primary */
-  border: 1px solid #9CA3AF;
-}
+<head>
+  ...
+  <style>
+    :root {
+      --brand-primary: #1F2933;
+      --brand-accent: #F4B400;
+    }
 
-button.print-all:hover {
-  background: #D1D5DB;
-}
+    /* existing styles */
+
+    /* PRINT ALL – secondary action */
+    button.print-all {
+      background: #E5E7EB;
+      color: #1F2933;
+      border: 1px solid #9CA3AF;
+    }
+
+    button.print-all:hover {
+      background: #D1D5DB;
+    }
+
+    /* status styles etc */
+  </style>
+</head>
   <!-- RESULTS CONTAINER -->
   <div id="results"></div>
 
