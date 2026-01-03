@@ -16,13 +16,51 @@ function searchWO() {
     phone: document.getElementById("phone").value
   });
 
-  fetch(`${SCRIPT_URL}?${params}`)
-    .then(res => res.json())
-    .then(renderResults)
-    .catch(err => {
-      console.error(err);
-      alert("Search failed. Check Apps Script deployment.");
-    });
+.then(data => {
+  // data is an ARRAY, not an object
+  if (!Array.isArray(data)) {
+    alert("Search failed. Invalid response.");
+    return;
+  }
+
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+
+  if (data.length === 0) {
+    container.innerHTML = "<p>No records found.</p>";
+    return;
+  }
+
+  data.forEach(r => {
+    container.innerHTML += `
+      <div class="wo-card">
+        <div class="wo-header">
+          <span class="wo-number">WO${r.wo}</span>
+          <span class="wo-status">${r.status}</span>
+        </div>
+
+        <div class="wo-line">
+          <span class="label">Date</span>
+          <span class="value">${r.date}</span>
+        </div>
+
+        <div class="wo-line">
+          <span class="label">Client</span>
+          <span class="value">${r.client}</span>
+        </div>
+
+        <div class="wo-line">
+          <span class="label">Category</span>
+          <span class="value">${r.category}</span>
+        </div>
+
+        <div class="wo-actions">
+          <button onclick="printSingle('${r.wo}')">PRINT</button>
+        </div>
+      </div>
+    `;
+  });
+})
 }
 
 /* ===============================
