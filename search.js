@@ -55,7 +55,7 @@ function renderResults(data) {
     card.innerHTML = `
       <div class="wo-header">
         <span class="wo-number">WO${r.wo}</span>
-        <span class="wo-status">${r.status}</span>
+        <span class="wo-status ${getStatusClass(r.status)}">${r.status}</span>
       </div>
 
       <div class="wo-line">
@@ -105,4 +105,14 @@ function printAll() {
   });
 
   window.open(`${SCRIPT_URL}?${params.toString()}`, "_blank");
+}
+function getStatusClass(status) {
+  if (!status) return "";
+  status = status.toLowerCase();
+
+  if (status === "pending") return "status-pending";
+  if (status === "in progress") return "status-in-progress";
+  if (status === "completed") return "status-completed";
+
+  return "";
 }
