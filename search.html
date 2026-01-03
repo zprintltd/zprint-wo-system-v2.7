@@ -77,12 +77,30 @@
       font-weight: 600;
     }
 
-    .wo-status {
-      font-size: 13px;
-      padding: 4px 8px;
-      background: var(--brand-accent);
-      color: #000;
-    }
+/* STATUS BADGES */
+.wo-status {
+  font-size: 13px;
+  padding: 4px 10px;
+  font-weight: 500;
+  border-radius: 2px;
+  color: #ffffff;
+}
+
+/* Pending */
+.status-pending {
+  background: #DC2626; /* red */
+}
+
+/* In Progress */
+.status-in-progress {
+  background: #F59E0B; /* yellow */
+  color: #000000;
+}
+
+/* Completed */
+.status-completed {
+  background: #16A34A; /* green */
+}
 
     .wo-line {
       display: flex;
@@ -138,9 +156,18 @@
   <!-- ACTION BUTTONS -->
 <div class="actions">
   <button onclick="searchWO()">SEARCH</button>
-  <button onclick="printAll()">PRINT ALL</button>
+  <button class="print-all" onclick="printAll()">PRINT ALL</button>
 </div>
+/* PRINT ALL – secondary action */
+button.print-all {
+  background: #E5E7EB;      /* light grey */
+  color: #1F2933;           /* brand primary */
+  border: 1px solid #9CA3AF;
+}
 
+button.print-all:hover {
+  background: #D1D5DB;
+}
   <!-- RESULTS CONTAINER -->
   <div id="results"></div>
 
